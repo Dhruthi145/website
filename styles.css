@@ -216,7 +216,7 @@ p {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(110deg, rgba(8,16,30,.84), rgba(11,31,58,.56)), url('bg.jpg') center/cover no-repeat;
+  background: linear-gradient(110deg, rgba(8,16,30,.84), rgba(11,31,58,.56)), url('bg.jpg') center/cover no-repeat fixed;
   position: relative;
   color: white;
   padding: 7rem 0 4rem;
@@ -264,7 +264,8 @@ p {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 2.2rem;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
   max-width: 580px;
 }
 
@@ -295,10 +296,11 @@ p {
 .floating-card {
   position: absolute;
   padding: 1rem 1.2rem;
-  background: rgba(255,255,255,.9);
-  color: var(--navy);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.22);
+  color: white;
   border-radius: 1rem;
-  box-shadow: var(--shadow);
+  box-shadow: none;
   animation: float 6s ease-in-out infinite;
   backdrop-filter: blur(8px);
 }
@@ -308,7 +310,7 @@ p {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--green);
+  color: rgba(255,255,255,.7);
   font-weight: 700;
   margin-bottom: 0.35rem;
 }
@@ -317,11 +319,11 @@ p {
   font-size: 1rem;
 }
 
-.card-a { top: 15%; right: 10%; animation-delay: 0s; }
-.card-b { top: 38%; left: 8%; animation-delay: 1.5s; }
-.card-c { bottom: 16%; right: 15%; animation-delay: 3s; }
-.card-d { bottom: 8%; left: 10%; animation-delay: 4.5s; }
-.card-e { top: 5%; left: 8%; animation-delay: 2s; }
+.card-a { top: 0%; right: 10%; animation-delay: 0s; }
+.card-b { top: 48%; left: 20%; animation-delay: 1.5s; }
+.card-c { bottom: 6%; left: 55%; animation-delay: 3s; }
+.card-d { bottom: -2%; right: 60%; animation-delay: 4.5s; }
+.card-e { top: -5%; left: 8%; animation-delay: 2s; }
 
 .scroll-indicator {
   position: absolute;
@@ -332,7 +334,7 @@ p {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255,255,255,.8);
+  color: rgba(234, 213, 213, 0.8);
 }
 
 .scroll-indicator span {
