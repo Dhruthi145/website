@@ -1,8 +1,11 @@
 const header = document.querySelector('.site-header');
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = document.querySelector('.nav-links');
+const dropdownToggle = document.querySelector('.dropdown-toggle');
+const dropdownMenu = document.querySelector('.dropdown-menu');
 const revealItems = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
 const counters = document.querySelectorAll('[data-count]');
+const businessCards = document.querySelectorAll('.business-card[data-href]');
 
 const setHeaderState = () => {
   if (window.scrollY > 24) {
@@ -15,6 +18,23 @@ const setHeaderState = () => {
 const toggleMenu = () => {
   const open = navLinks.classList.toggle('open');
   navToggle.setAttribute('aria-expanded', String(open));
+};
+
+const closeDropdown = () => {
+  dropdownToggle?.classList.remove('active');
+  dropdownToggle?.setAttribute('aria-expanded', 'false');
+  dropdownMenu?.classList.remove('open');
+};
+
+const toggleDropdown = () => {
+  const expanded = dropdownToggle?.getAttribute('aria-expanded') === 'true';
+  if (expanded) {
+    closeDropdown();
+  } else {
+    dropdownToggle?.classList.add('active');
+    dropdownToggle?.setAttribute('aria-expanded', 'true');
+    dropdownMenu?.classList.add('open');
+  }
 };
 
 const revealOnScroll = () => {
@@ -53,12 +73,29 @@ window.addEventListener('scroll', () => {
 });
 
 navToggle?.addEventListener('click', toggleMenu);
+dropdownToggle?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  toggleDropdown();
+});
 
 navLinks?.querySelectorAll('a').forEach((link) => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
     navToggle.setAttribute('aria-expanded', 'false');
+    closeDropdown();
   });
+});
+
+businessCards.forEach((card) => {
+  card.addEventListener('click', () => {
+    window.location.href = card.getAttribute('data-href');
+  });
+});
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.nav-dropdown')) {
+    closeDropdown();
+  }
 });
 
 window.addEventListener('load', () => {
