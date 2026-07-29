@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VisionSpace AI — Studio</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --cream: #faf7f2;
+      --cream2: #f3ede3;
+      --cream3: #ece4d6;
+      --maroon: #6b1f2a;
+      --maroon2: #8b2635;
+      --maroon3: #a63346;
+      --maroon-light: rgba(107, 31, 42, 0.07);
+      --maroon-mid: rgba(107, 31, 42, 0.14);
+      --text: #1a0a0d;
+      --text-mid: #5a3a3f;
+      --text-light: #9a7a7f;
+      --border: #e2d5c8;
+      --border2: rgba(107, 31, 42, 0.1);
+      --white: #ffffff;
+      --r: 10px;
+      --rl: 14px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── AUTH MODAL ── */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 10, 13, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 400px;
+      margin: 16px;
+      overflow: hidden;
+      position: relative;
+      animation: mIn 0.28s ease;
+    }
+
+    @keyframes mIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: var(--cream2);
+      border: none;
+      border-radius: 7px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 32px 28px 28px;
+    }
+
+    .modal-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+
+    .modal-logo img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .modal-logo-txt {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .auth-seg {
+      display: flex;
+      background: var(--cream2);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .auth-seg-btn {
+      flex: 1;
+      border: none;
+      background: none;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-light);
+      cursor: pointer;
+      border-radius: 7px;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .auth-seg-btn.act {
+      background: var(--white);
+      color: var(--maroon);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .auth-panel {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auth-panel.act {
+      display: flex;
+    }
+
+    .auth-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .auth-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .auth-inp {
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 13px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .auth-inp:focus {
+      outline: none;
+      border-color: var(--maroon);
+    }
+
+    .auth-inp::placeholder {
+      color: var(--text-light);
+    }
+
+    .auth-btn {
+      background: var(--maroon);
+      color: var(--white);
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .auth-btn:hover {
+      background: var(--maroon2);
+    }
+
+    .auth-err {
+      font-size: 12px;
+      color: #c0392b;
+      text-align: center;
+      min-height: 14px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 54px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+
+    .nav-logo-txt {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .nav-link {
+      background: none;
+      border: none;
+      font-size: 13px;
+      color: var(--text-mid);
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .nav-link:hover {
+      background: var(--cream2);
+      color: var(--text);
+    }
+
+    .nav-btn-login {
+      background: var(--maroon);
+      color: var(--white);
+      border: none;
+      padding: 6px 20px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s;
+    }
+
+    /* User Chip & Dropdown */
+    .user-chip {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 13px 4px 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .user-chip:hover {
+      border-color: var(--maroon);
+      transform: translateY(-1px);
+    }
+
+    .user-chip.show {
+      display: flex;
+    }
+
+    .user-av {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--maroon);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-nm {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .user-dd {
+      display: none;
+      position: absolute;
+      top: 54px;
+      right: 0;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 200px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(107, 31, 42, 0.12);
+      z-index: 300;
+      animation: ddIn 0.2s ease;
+    }
+
+    @keyframes ddIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .user-dd.open {
+      display: block;
+    }
+
+    .user-dd-head {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--maroon-light);
+    }
+
+    .user-dd-head strong {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .user-dd-head span {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .user-dd-item {
+      width: 100%;
+      border: none;
+      background: none;
+      text-align: left;
+      padding: 11px 16px;
+      font-size: 13px;
+      color: var(--text-mid);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .user-dd-item:hover {
+      background: var(--cream2);
+      color: var(--maroon);
+    }
+
+    .user-dd-item.logout {
+      color: #c0392b;
+      border-top: 1px solid var(--border2);
+    }
+
+    /* ── ACTIVITY MODAL ── */
+    #activityModal .modal {
+      max-width: 550px;
+    }
+
+    /* Activity Gallery */
+    .act-thumb {
+      width: 120px;
+      height: 90px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--cream3);
+    }
+
+    .act-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .act-item:hover {
+      border-color: var(--maroon);
+      background: var(--maroon-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(107, 31, 42, 0.08);
+    }
+
+    .act-list {
+      max-height: 65vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-right: 4px;
+    }
+
+    .act-list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .act-list::-webkit-scrollbar-track {
+      background: var(--cream2);
+      border-radius: 10px;
+    }
+    .act-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    .act-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .act-thumb {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--cream3);
+      border: 1px solid var(--border);
+    }
+
+    .act-item:hover {
+      border-color: var(--maroon);
+      background: var(--maroon-light);
+    }
+
+    .act-item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .act-date {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--maroon);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .act-walls {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    .act-prompt {
+      font-size: 12px;
+      color: var(--text-mid);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* ── LAYOUT ── */
+    .studio {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      min-height: calc(100vh - 114px);
+      /* Combined nav and steps height */
+      background: var(--cream);
+    }
+
+    .studio.pref-mode {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+
+    .studio.pref-mode .sidebar {
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      border-right: none;
+      height: auto;
+      position: static;
+    }
+
+    /* Steps Progress */
+    .steps-bar {
+      grid-column: 1 / -1;
+      height: 60px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      position: relative;
+    }
+
+    .step-item.act {
+      color: var(--maroon);
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .step-item.act .step-num {
+      background: var(--maroon);
+      color: var(--white);
+      border-color: var(--maroon);
+    }
+
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      width: 12px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Hidden Sidebar state */
+    .sidebar.hidden {
+      display: none;
+    }
+
+    .rpanel.full {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .sidebar {
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      height: calc(100vh - 114px);
+      position: sticky;
+      top: 114px;
+      padding: 0;
+      width: 420px;
+      /* Wider for full screen feel */
+    }
+
+    .sb-section {
+      padding: 32px 40px;
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .sb-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .style-grid {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .style-btn {
+      flex: 0 0 calc(100% / 7.5);
+      /* Aims for roughly 7-8 per row */
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 12px;
+      transition: all 0.2s;
+      min-width: 90px;
+    }
+
+    .style-btn.act {
+      border-color: var(--maroon);
+      background: var(--maroon-light);
+      box-shadow: 0 4px 12px rgba(107, 31, 42, 0.1);
+    }
+
+    .style-circle {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .style-btn.act .style-circle {
+      border-color: var(--maroon);
+    }
+
+    .style-lbl {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-mid);
+      text-align: center;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .room-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .rpill {
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .rpill.act {
+      background: var(--maroon-light);
+      border-color: var(--maroon);
+      color: var(--maroon);
+    }
+
+    .theme-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tdot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .tdot.act {
+      border-color: var(--text);
+      box-shadow: 0 0 0 2px rgba(26, 10, 13, 0.2);
+    }
+
+    .sw-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 8px;
+    }
+
+    .sw {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .sw.act {
+      border-color: var(--maroon);
+      box-shadow: 0 0 0 1.5px var(--maroon);
+    }
+
+    .sw.act::after {
+      content: '\2713';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .sw-lbl {
+      font-size: 10px;
+      color: var(--maroon);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .sb-sel-wrap {
+      position: relative;
+    }
+
+    .sb-sel-wrap::after {
+      content: '';
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-light);
+      pointer-events: none;
+    }
+
+    .sb-sel {
+      width: 100%;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .bud-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .bud-amt {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--maroon);
+    }
+
+    .bud-sub {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    input[type=range] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 2px;
+      background: var(--cream3);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--maroon);
+      cursor: pointer;
+      border: 2px solid var(--white);
+      box-shadow: 0 1px 4px rgba(107, 31, 42, 0.3);
+    }
+
+    .tier-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-top: 10px;
+    }
+
+    .tier-txt strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tier-txt span {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    .notes-area {
+      width: 100%;
+      min-height: 72px;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 12px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+    }
+
+    .gen-wrap {
+      padding: 14px 16px 16px;
+    }
+
+    .gen-btn {
+      width: 100%;
+      background: var(--maroon);
+      color: var(--white);
+      border: none;
+      padding: 13px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(107, 31, 42, 0.22);
+    }
+
+    .gen-btn:hover {
+      background: var(--maroon2);
+      transform: translateY(-1px);
+    }
+
+    .gen-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .rpanel {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      overflow-y: auto;
+      background: var(--cream);
+      flex: 1;
+    }
+
+    .rpanel.full {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    .upload-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--rl);
+      overflow: hidden;
+    }
+
+    .upload-card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .upload-card-head h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .upload-card-head p {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .drop-zone {
+      margin: 18px;
+      border: 1.5px dashed rgba(107, 31, 42, 0.2);
+      border-radius: 10px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      background: rgba(107, 31, 42, 0.01);
+    }
+
+    .drop-zone:hover {
+      border-color: var(--maroon);
+      background: rgba(107, 31, 42, 0.04);
+    }
+
+    .drop-icon {
+      width: 46px;
+      height: 46px;
+      background: var(--maroon-light);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .drop-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--maroon);
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .drop-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .drop-sub {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .uprog {
+      margin: 0 18px 14px;
+      display: none;
+    }
+
+    .uprog-track {
+      height: 2px;
+      background: var(--cream3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .uprog-fill {
+      height: 100%;
+      width: 0;
+      background: var(--maroon);
+      transition: width 0.15s;
+    }
+
+    .vprev {
+      margin: 24px auto;
+      max-width: 650px;
+      display: none;
+      padding: 0 24px;
+    }
+
+    .vprev video {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* Results */
+    .results-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--rl);
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    .results-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-head h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .dl-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-mid);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .dl-btn:hover {
+      border-color: var(--maroon);
+      color: var(--maroon);
+      background: #fff;
+    }
+
+    .dl-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .prompt-box {
+      margin: 24px 32px;
+      background: var(--cream2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+
+    .prompt-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--maroon);
+      margin-bottom: 10px;
+    }
+
+    .prompt-txt {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+      padding: 0 32px 32px;
+    }
+
+    .comp-pair {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      animation: cardFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes cardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .comp-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comp-wall {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--maroon);
+    }
+
+    .comp-imgs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .comp-imgs img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .comp-imgs img:hover {
+      opacity: 0.85;
+    }
+
+    .comp-foot {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--white);
+    }
+
+    .comp-foot span {
+      font-size: 9px;
+      padding: 10px 20px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .comp-foot span:last-child {
+      color: var(--maroon);
+      border-left: 1px solid var(--border);
+      text-align: right;
+    }
+
+    .loading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 5, 8, 0.55);
+      backdrop-filter: blur(32px);
+      z-index: 2000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+    }
+
+    /* ── LIGHTBOX ── */
+    #lbBg {
+      z-index: 3000;
+      background: rgba(0, 0, 0, 0.9);
+      padding: 24px;
+    }
+
+    .lb-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lb-content img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+      object-fit: contain;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: -40px;
+      right: 0px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 32px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .lb-close:hover {
+      transform: scale(1.1);
+    }
+
+    .loading.on {
+      display: flex;
+    }
+
+    .loader-content {
+      text-align: center;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .loader-ring {
+      width: 48px;
+      height: 48px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 24px;
+    }
+
+    .loader-txt h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .loader-txt p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 24px;
+      min-height: 18px;
+    }
+
+    .gen-prog {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      height: 2px;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .gen-prog-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--white);
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gen-pct {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 4px;
+      opacity: 0.8;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-size: 13px;
+      z-index: 900;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: all 0.22s;
+      max-width: 300px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.err {
+      border-color: rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+    }
+
+    @media(max-width:900px) {
+      .studio {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+      }
+
+      .comp-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-bg" id="authBg">
+    <div class="modal">
+      <button class="modal-close" onclick="closeAuth()">✕</button>
+      <div class="modal-body">
+        <div class="modal-logo" style="margin-bottom:28px;">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b1f2a'/%3E%3Cpath d='M12 34L32 16l20 18' fill='none' stroke='%23faf7f2' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='20' y='34' width='10' height='14' rx='2' fill='%23faf7f2'/%3E%3Crect x='34' y='28' width='10' height='20' rx='2' fill='rgba(250,247,242,0.55)'/%3E%3C/svg%3E">
+          <span class="modal-logo-txt">VisionSpace AI</span>
+        </div>
+        <div class="auth-panel act" id="ap-login">
+          <h3
+            style="font-family:'Playfair Display',serif; font-size:22px; margin-bottom:20px; text-align:center; color:var(--maroon);">
+            Login</h3>
+          <div class="auth-field"><label class="auth-lbl">Email</label><input class="auth-inp" type="email" id="lemail"
+              placeholder="you@example.com"></div>
+          <div class="auth-field"><label class="auth-lbl">Password</label><input class="auth-inp" type="password"
+              id="lpwd" placeholder="••••••••"></div>
+          <div class="auth-err" id="lerr"></div>
+          <button class="auth-btn" onclick="doLogin()">Login</button>
+        </div>
+        <div class="auth-panel" id="ap-signup">
+          <h3
+            style="font-family:'Playfair Display',serif; font-size:22px; margin-bottom:20px; text-align:center; color:var(--maroon);">
+            Sign In</h3>
+          <div class="auth-field"><label class="auth-lbl">Name</label><input class="auth-inp" type="text" id="sname"
+              placeholder="Your name"></div>
+          <div class="auth-field"><label class="auth-lbl">Email</label><input class="auth-inp" type="email" id="semail"
+              placeholder="you@example.com"></div>
+          <div class="auth-field"><label class="auth-lbl">Password</label><input class="auth-inp" type="password"
+              id="spwd" placeholder="At least 6 chars"></div>
+          <div class="auth-err" id="serr"></div>
+          <button class="auth-btn" onclick="doSignup()">Sign In</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY MODAL -->
+  <div class="modal-bg" id="activityModal">
+    <div class="modal">
+      <button class="modal-close" onclick="$('activityModal').classList.remove('open')">✕</button>
+      <div class="modal-body">
+        <h3 style="font-family:'Playfair Display',serif;margin-bottom:20px;font-size:22px;">My Activity</h3>
+        <div id="actList" class="act-list">
+          <p style="text-align:center;color:var(--text-light);padding:20px;">No designs yet. Start creating!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/">
+      <img style="width:28px;height:28px;margin-right:4px;"
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b1f2a'/%3E%3Cpath d='M12 34L32 16l20 18' fill='none' stroke='%23faf7f2' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='20' y='34' width='10' height='14' rx='2' fill='%23faf7f2'/%3E%3Crect x='34' y='28' width='10' height='20' rx='2' fill='rgba(250,247,242,0.55)'/%3E%3C/svg%3E">
+      <span class="nav-logo-txt">VisionSpace AI</span>
+    </a>
+    <div class="nav-right">
+      <div id="authBtns" style="display: flex; gap: 8px;">
+        <button class="nav-link" style="border: 1px solid var(--border);" onclick="openAuth('signup')">Sign In</button>
+        <button class="nav-btn-login" onclick="openAuth('login')">Login</button>
+      </div>
+      <div class="user-chip" id="userChip" onclick="toggleDD(event)">
+        <div class="user-av" id="userAv"></div>
+        <span class="user-nm" id="userNm"></span>
+      </div>
+      <div class="user-dd" id="userDD">
+        <div class="user-dd-head">
+          <strong id="ddNm"></strong>
+          <span id="ddEmail"></span>
+        </div>
+        <button class="user-dd-item" onclick="openActivity()">
+          <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg> My Activity
+        </button>
+        <button class="user-dd-item logout" onclick="doLogout()">
+          <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg> Sign Out
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="steps-bar">
+    <div class="step-item act" id="s1">
+      <div class="step-num">1</div>
+      <span>Upload Video</span>
+    </div>
+    <div class="step-item" id="s2">
+      <div class="step-num">2</div>
+      <span>Configure Design</span>
+    </div>
+    <div class="step-item" id="s3">
+      <div class="step-num">3</div>
+      <span>Final Results</span>
+    </div>
+  </div>
+
+  <div class="studio">
+    <aside class="sidebar">
+      <div class="sb-section"><span class="sb-lbl">Design Style</span>
+        <div class="style-grid" id="styleGrid"></div><input type="hidden" id="styleVal" value="modern">
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Room Type</span>
+        <div class="room-pills" id="roomPills"></div><input type="hidden" id="roomVal" value="living_room">
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Color Theme</span>
+        <div class="theme-row" id="themeRow"></div><input type="hidden" id="themeVal" value="neutral">
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Wall Color</span>
+        <div class="sw-grid" id="swGrid"></div><input type="hidden" id="wallVal" value="white">
+        <div class="sw-lbl" id="swLbl">White</div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Curtains</span>
+        <div class="sb-sel-wrap"><select class="sb-sel" id="curtainSel">
+            <option value="none">None</option>
+            <option value="sheer_white" selected>Sheer White</option>
+            <option value="linen_natural">Natural Linen</option>
+            <option value="velvet_rich">Rich Velvet</option>
+            <option value="blackout_dark">Blackout Dark</option>
+            <option value="patterned_boho">Patterned Boho</option>
+            <option value="silk_elegant">Silk Elegant</option>
+            <option value="cotton_casual">Cotton Casual</option>
+          </select></div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Wall Decor</span>
+        <div class="sb-sel-wrap"><select class="sb-sel" id="decorSel">
+            <option value="none">None</option>
+            <option value="minimal_frames" selected>Minimal Frames</option>
+            <option value="gallery_wall">Gallery Wall</option>
+            <option value="large_mirror">Oversized Mirror</option>
+            <option value="floating_shelves">Floating Shelves</option>
+            <option value="tapestry">Woven Tapestry</option>
+            <option value="abstract_art">Abstract Canvas</option>
+            <option value="botanical_prints">Botanical Prints</option>
+            <option value="geometric_panels">Geometric 3D Panels</option>
+            <option value="neon_sign">Neon Sign</option>
+          </select></div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Lighting</span>
+        <div class="sb-sel-wrap"><select class="sb-sel" id="lightSel">
+            <option value="warm_ambient" selected>Warm Ambient</option>
+            <option value="natural_daylight">Natural Daylight</option>
+            <option value="cool_bright">Cool Bright</option>
+            <option value="dramatic_spot">Dramatic Spotlights</option>
+            <option value="candlelight_warm">Candlelight</option>
+            <option value="neon_accent">Neon Accent</option>
+            <option value="golden_hour">Golden Hour</option>
+          </select></div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Flooring</span>
+        <div class="sb-sel-wrap"><select class="sb-sel" id="floorSel">
+            <option value="keep_existing">Keep existing</option>
+            <option value="light_oak_wood">Light Oak</option>
+            <option value="dark_walnut_wood">Dark Walnut</option>
+            <option value="white_marble">White Carrara Marble</option>
+            <option value="grey_concrete">Polished Concrete</option>
+            <option value="plush_carpet">Plush Carpet</option>
+            <option value="herringbone_wood">Herringbone Parquet</option>
+            <option value="terracotta_tiles">Terracotta Tiles</option>
+            <option value="black_white_checkered">B&W Checkered</option>
+            <option value="chevron_parquet">Chevron Parquet</option>
+          </select></div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Indoor Plants</span>
+        <div class="sb-sel-wrap"><select class="sb-sel" id="plantSel">
+            <option value="none">None</option>
+            <option value="minimal_one_plant" selected>One Statement Plant</option>
+            <option value="few_plants">A Few Plants</option>
+            <option value="lush_jungle">Lush Jungle</option>
+          </select></div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Ceiling Style</span>
+        <div class="sb-sel-wrap"><select class="sb-sel" id="ceilSel">
+            <option value="standard_white" selected>Standard White</option>
+            <option value="exposed_wooden_beams">Exposed Wooden Beams</option>
+            <option value="coffered_classic">Coffered Classical</option>
+            <option value="modern_cove_lighting">Modern Cove Lighting</option>
+            <option value="dark_painted">Dark Painted</option>
+            <option value="industrial_exposed">Industrial Exposed</option>
+          </select></div>
+      </div>
+      <div class="sb-section"><span class="sb-lbl">Budget</span>
+        <div class="bud-row"><span class="bud-sub">$500</span><span class="bud-amt" id="budAmt">$5,000</span><span
+            class="bud-sub">$50k</span></div><input type="range" id="budRange" min="500" max="50000" value="5000"
+          step="500">
+        <div class="tier-row">
+          <span class="tier-ic" id="tierIc">◈</span>
+          <div class="tier-txt"><strong id="tierNm">Mid-Range</strong><span id="tierDsc">Solid craftsmanship, durable
+              quality</span></div>
+        </div>
+      </div>
+
+      <div class="gen-wrap"><button class="gen-btn" id="genBtn" disabled onclick="doGenerate()">Generate
+          Designs</button></div>
+    </aside>
+
+    <main class="rpanel">
+      <div class="upload-card">
+        <div class="upload-card-head">
+          <h3>Upload Room Video</h3>
+          <p>Walk through your room — we detect walls automatically</p>
+        </div>
+        <div class="drop-zone" id="dropZone"><input type="file" id="vidInput" accept="video/*">
+          <div class="drop-icon"><svg viewBox="0 0 24 24">
+              <path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14" />
+              <rect x="1" y="6" width="15" height="12" rx="2" />
+            </svg></div>
+          <div class="drop-title">Drop room video here</div>
+          <div class="drop-sub">max 500 MB</div>
+        </div>
+        <div class="uprog" id="uprog">
+          <div class="uprog-track">
+            <div class="uprog-fill" id="uprogFill"></div>
+          </div>
+        </div>
+        <div class="vprev" id="vprev"><video id="vidPlayer" controls></video></div>
+        <div id="nextStepWrap"
+          style="display:none; padding:18px; border-top:1px solid var(--border); text-align:right;">
+          <button class="gen-btn" style="width:auto; padding:12px 32px;" onclick="goToStep(2)">Next: Configure Design
+            →</button>
+        </div>
+      </div>
+      <div class="results-card" id="resultsCard">
+        <div class="results-head">
+          <h3>Generated Designs</h3>
+          <div style="display:flex;gap:12px;">
+            <button class="nav-btn-login"
+              style="background:var(--cream2); color:var(--text-mid); border:1px solid var(--border);"
+              onclick="location.reload()">New Project</button>
+            <a href="#" class="dl-btn" id="dlBtn"><svg viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>ZIP</a>
+          </div>
+        </div>
+        <div class="prompt-box">
+          <div class="prompt-lbl">AI Prompt</div>
+          <div class="prompt-txt" id="promptTxt">—</div>
+        </div>
+        <div class="comp-grid" id="compGrid"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="loader-content">
+      <div class="loader-txt">
+        <h4>Designing your vision</h4>
+        <p id="loaderSub">Initializing pipeline archive...</p>
+        <div class="gen-pct" id="genPct">○○○○○○○○○○○○</div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="modal-bg" id="lbBg" onclick="closeLb(event)">
+    <div class="lb-content">
+      <button class="lb-close" onclick="closeLb()">✕</button>
+      <img id="lbImg" src="" onclick="event.stopPropagation()">
+    </div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const showToast = (msg, err) => { const t = $('toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000) };
+
+    let upId = null, currentUser = null;
+
+    // ── AUTH ──
+    const openAuth = t => { $('authBg').classList.add('open'); if (t) switchAuth(t) };
+    const switchAuth = t => { document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('act')); $('ap-' + t).classList.add('act'); };
+    const closeAuth = () => $('authBg').classList.remove('open');
+    const toggleDD = e => { e.stopPropagation(); $('userDD').classList.toggle('open') };
+    document.onclick = () => $('userDD').classList.remove('open');
+
+    async function checkUser() {
+      const r = await fetch('/api/auth/me'); const d = await r.json();
+      if (d.user) {
+        currentUser = d.user;
+        $('authBtns').style.display = 'none';
+        $('userChip').classList.add('show');
+        $('userNm').textContent = d.user.name;
+        $('userAv').textContent = d.user.name[0].toUpperCase();
+        $('userAv').style.background = d.user.avatar_color;
+        $('ddNm').textContent = d.user.name;
+        $('ddEmail').textContent = d.user.email;
+      }
+    }
+    async function doLogin() {
+      const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: $('lemail').value, password: $('lpwd').value }) });
+      const d = await res.json(); if (d.user) location.reload(); else $('lerr').textContent = d.error;
+    }
+    async function doSignup() {
+      const res = await fetch('/api/auth/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: $('sname').value, email: $('semail').value, password: $('spwd').value }) });
+      const d = await res.json(); if (d.user) location.reload(); else $('serr').textContent = d.error;
+    }
+    async function doLogout() { await fetch('/api/auth/logout', { method: 'POST' }); location.reload(); }
+
+    // ── ACTIVITY ──
+    async function openActivity() {
+      $('activityModal').classList.add('open');
+      const r = await fetch('/api/designs/history'); const d = await r.json();
+      const list = $('actList'); list.innerHTML = '';
+      if (!d.designs || d.designs.length === 0) { list.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:20px;">No designs yet.</p>'; return; }
+      d.designs.forEach(x => {
+        const item = document.createElement('div'); item.className = 'act-item';
+        const date = new Date(x.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        item.innerHTML = `<div class="act-item-header"><span class="act-date">${date}</span><span class="act-walls">${x.wall_count} Walls</span></div><div class="act-prompt">${x.prompt}</div>`;
+        list.appendChild(item);
+      });
+    }
+
+    // ── NAVIGATION & STEPS ──
+    async function goToStep(n) {
+      // Step visibility
+      document.querySelectorAll('.step-item').forEach((it, i) => {
+        it.classList.toggle('act', (i + 1) === n);
+      });
+
+      const st = document.querySelector('.studio');
+      const sb = document.querySelector('.sidebar');
+      const rp = document.querySelector('.rpanel');
+      const uc = document.querySelector('.upload-card');
+      const rc = $('resultsCard');
+
+      if (n === 1) {
+        st.classList.remove('pref-mode');
+        sb.classList.add('hidden');
+        rp.style.display = 'block';
+        rp.classList.add('full');
+        uc.style.display = 'block';
+        rc.style.display = 'none';
+      } else if (n === 2) {
+        st.classList.add('pref-mode');
+        sb.classList.remove('hidden');
+        rp.style.display = 'none';
+        uc.style.display = 'none';
+        rc.style.display = 'none';
+        const vp = $('vprev');
+        if (vp) vp.style.display = 'none';
+      } else if (n === 3) {
+        st.classList.remove('pref-mode');
+        sb.classList.add('hidden');
+        rp.style.display = 'block';
+        rp.classList.add('full');
+        uc.style.display = 'none';
+        rc.style.display = 'block';
+        const vp = $('vprev');
+        if (vp) {
+          vp.style.display = 'block';
+          rc.insertBefore(vp, rc.querySelector('.prompt-box'));
+        }
+      }
+    }
+
+    // ── UPLOAD ──
+    function handleFile(f) {
+      const player = $('vidPlayer');
+      player.src = URL.createObjectURL(f);
+      $('vprev').style.display = 'block';
+      $('genBtn').disabled = true;
+      $('uprog').style.display = 'block';
+
+      const fd = new FormData();
+      fd.append('video', f);
+
+      const x = new XMLHttpRequest();
+      x.open('POST', '/upload');
+      x.upload.onprogress = e => {
+        if (e.lengthComputable) {
+          $('uprogFill').style.width = (e.loaded / e.total * 100) + '%';
+        }
+      };
+      x.onload = () => {
+        const d = JSON.parse(x.responseText);
+        if (x.status === 200) {
+          upId = d.video_id;
+          $('genBtn').disabled = false;
+          $('uprog').style.display = 'none';
+          $('nextStepWrap').style.display = 'block';
+          showToast("Video ready! Click Next to continue.");
+        } else {
+          showToast(d.error, true);
+        }
+      };
+      x.send(fd);
+    }
+    $('dropZone').onclick = () => $('vidInput').click();
+    $('vidInput').onchange = () => handleFile($('vidInput').files[0]);
+
+    // ── LOADER ──
+    const STEPS = ['Analyzing room structure...', 'Segmenting walls and surfaces...', 'Optimizing lighting maps...', 'Identifying furniture & decor...', 'Running high-res feature extraction...', 'Encoding design preferences...', 'Fusing visual & text tokens...', 'Constructing AI design instructions...', 'Refining wall paint & textures...', 'Generating photorealistic design...', 'Finalizing gallery...'];
+    let si = null;
+
+    function getDots(currentIndex) {
+      let str = '';
+      // Add one extra dot total, as requested
+      for (let j = 0; j <= STEPS.length; j++) {
+        if (j <= currentIndex) str += '●';
+        else str += '○';
+      }
+      return str;
+    }
+
+    function startLoader() {
+      const loading = $('loading');
+      const sub = $('loaderSub');
+      const pct = $('genPct');
+
+      loading.classList.add('on');
+      pct.textContent = getDots(0);
+      sub.textContent = STEPS[0];
+
+      let i = 0;
+      si = setInterval(() => {
+        if (i < STEPS.length - 1) {
+          i++;
+          sub.textContent = STEPS[i];
+          pct.textContent = getDots(i);
+        }
+      }, 2500);
+    }
+    function stopLoader() {
+      clearInterval(si);
+      $('loading').classList.remove('on');
+    }
+
+    // ── RENDER ──
+    function renderResults(d) {
+      $('resultsCard').style.display = 'block';
+      $('promptTxt').textContent = d.prompt;
+      const cg = $('compGrid'); cg.innerHTML = '';
+
+      d.after_images.forEach((img, i) => {
+        const el = document.createElement('div');
+        el.className = 'comp-pair';
+        el.style.animationDelay = (i * 0.1) + 's';
+        el.innerHTML = `
+          <div class="comp-head">
+            <span class="comp-wall">Wall ${i + 1}</span>
+            <span style="font-size: 10px; color: var(--text-light)">Resolution 4K AI</span>
+          </div>
+          <div class="comp-imgs">
+            <div style="position: relative;">
+               <div style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.85); color:var(--text); padding:4px 8px; border-radius:4px; font-size:9px; font-weight:700; z-index:5; backdrop-filter:blur(4px);">BEFORE</div>
+               <img src="${d.before_images[i]}" onclick="openLb('${d.before_images[i]}')">
+            </div>
+            <div style="position: relative;">
+               <div style="position:absolute; top:12px; left:12px; background:rgba(107,31,42,0.85); color:white; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:700; z-index:5; backdrop-filter:blur(4px);">AFTER</div>
+               <img src="${img}" onclick="openLb('${img}')">
+            </div>
+          </div>
+          <div class="comp-foot">
+            <span>Original State</span>
+            <span>VisionSpace Render</span>
+          </div>`;
+        cg.appendChild(el);
+      });
+      $('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ── LIGHTBOX ──
+    function openLb(src) {
+      $('lbImg').src = src;
+      $('lbBg').classList.add('open');
+    }
+    function closeLb(e) {
+      if (e && e.target !== $('lbBg') && e.target.className !== 'lb-close') return;
+      $('lbBg').classList.remove('open');
+    }
+
+    // ── GENERATE ──
+    async function doGenerate() {
+      startLoader();
+      $('genBtn').disabled = true;
+      const fd = new FormData();
+      fd.append('video_id', upId);
+      fd.append('style', $('styleVal').value);
+      fd.append('room_type', $('roomVal').value);
+      fd.append('color_theme', $('themeVal').value);
+      fd.append('wall_color', $('wallVal').value);
+      fd.append('curtain_style', $('curtainSel').value);
+      fd.append('wall_decor', $('decorSel').value);
+      fd.append('lighting_mood', $('lightSel').value);
+      fd.append('flooring', $('floorSel').value);
+      fd.append('add_plants', $('plantSel').value);
+      fd.append('ceiling_style', $('ceilSel').value);
+      fd.append('budget', $('budRange').value);
+
+
+      try {
+        const r = await fetch('/process', { method: 'POST', body: fd });
+
+        // Output received! Fill the final extra dot and show for 1 sec before rendering
+        $('genPct').textContent = getDots(STEPS.length);
+        $('loaderSub').textContent = "Rendering complete! Preparing designs...";
+        await new Promise(res => setTimeout(res, 1000));
+
+        const d = await r.json();
+        stopLoader();
+        $('genBtn').disabled = false;
+
+        if (d.error) { showToast(d.error, true); return; }
+        if (currentUser) {
+          fetch('/api/designs/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: d.session_id, prompt: d.prompt, wall_count: d.wall_count })
+          });
+        }
+        renderResults(d);
+        goToStep(3);
+      } catch (err) {
+        stopLoader();
+        $('genBtn').disabled = false;
+        showToast("Generation failed. Please try again.", true);
+      }
+    }
+
+    async function openActivity() {
+      if (!currentUser) { openAuth('login'); return; }
+      const modal = $('activityModal');
+      const list = $('actList');
+      modal.classList.add('open');
+      list.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-light)">Loading designs...</div>`;
+
+      try {
+        const r = await fetch('/api/designs/history');
+        const data = await r.json();
+        list.innerHTML = '';
+
+        if (!data.designs || data.designs.length === 0) {
+          list.innerHTML = `<p style="text-align:center;color:var(--text-light);padding:40px;">No designs yet. Start creating!</p>`;
+          return;
+        }
+
+        data.designs.forEach(d => {
+          const item = document.createElement('div');
+          item.className = 'act-item';
+          item.onclick = () => loadSession(d.session_id);
+          const dt = new Date(d.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+
+          const beforeImg = `/static/outputs/${d.session_id}/before_0.jpg`;
+          const afterImg = `/static/outputs/${d.session_id}/design_0.png`;
+
+          item.innerHTML = `
+            <div class="act-item-header">
+              <span class="act-date">${dt}</span>
+              <span style="color: var(--maroon); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">View Full Project</span>
+            </div>
+            <div class="act-images">
+              <div style="position:relative">
+                <div style="position:absolute; top:6px; left:6px; background:rgba(255,255,255,0.8); color:var(--text); padding:2px 5px; border-radius:3px; font-size:8px; font-weight:700;">BEFORE</div>
+                <img src="${beforeImg}" class="act-thumb" onerror="this.src='https://placehold.co/400x300?text=Before'">
+              </div>
+              <div style="position:relative">
+                <div style="position:absolute; top:6px; left:6px; background:rgba(107,31,42,0.8); color:white; padding:2px 5px; border-radius:3px; font-size:8px; font-weight:700;">AFTER</div>
+                <img src="${afterImg}" class="act-thumb" onerror="this.src='https://placehold.co/400x300?text=After'">
+              </div>
+            </div>
+            <p class="act-prompt" style="font-size:12px; line-height:1.4; color:var(--text-mid); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${d.prompt || 'Custom Space Design'}</p>
+          `;
+          list.appendChild(item);
+        });
+      } catch (e) {
+        list.innerHTML = `<p style="text-align:center;color:#c0392b;padding:24px;">Could not load history.</p>`;
+      }
+    }
+
+    async function loadSession(id) {
+      if (!id) return;
+      $('activityModal').classList.remove('open');
+      showToast("Loading project...");
+
+      try {
+        const r = await fetch(`/api/designs/get/${id}`);
+        const d = await r.json();
+        if (d.error) throw new Error(d.error);
+
+        renderResults(d);
+        goToStep(3);
+        showToast("Project loaded!");
+      } catch (e) {
+        showToast("Failed to load design files.", true);
+      }
+    }
+
+    // ── INIT ──
+    const STYLES = [
+      { v: 'modern', l: 'Modern', img: 'https://media.designcafe.com/wp-content/uploads/2020/02/21010329/modern-living-room-design-ideas.jpg' },
+      { v: 'minimalist', l: 'Minimalist', img: 'https://api.gharpedia.com/wp-content/uploads/2018/08/0502010004-01-Minimalist-Interior-Style.jpg' },
+      { v: 'scandinavian', l: 'Scandinavian', img: 'https://cdn.shopify.com/s/files/1/0558/6413/1764/files/Scandinavian_Interior_Design_30_1024x1024.webp?v=1730301248' },
+      { v: 'bohemian', l: 'Boho', img: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400' },
+      { v: 'industrial', l: 'Industrial', img: 'https://cdn.prod.website-files.com/6334a8d89862a1cc15eae9e1/64c962af89055d7b83721cf6_18cf8cfa.jpeg' },
+      { v: 'luxury', l: 'Luxury', img: 'https://i.pinimg.com/736x/67/6e/9c/676e9cc3d9e66ddebe584c27e3bfbb33.jpg' },
+      { v: 'mid_century', l: 'Mid-Cent.', img: 'https://home-design.ai/nuxt_img/index/interior/South%20Western.webp' },
+      { v: 'traditional', l: 'Traditional', img: 'https://home-design.ai/nuxt_img/index/interior/Midcentury%20Modern.webp' },
+      { v: 'rustic', l: 'Rustic', img: 'https://home-design.ai/nuxt_img/index/interior/French%20Country.webp' }
+    ];
+    STYLES.forEach(s => {
+      const b = document.createElement('button');
+      b.className = 'style-btn' + (s.v === 'modern' ? ' act' : '');
+      b.innerHTML = `
+        <div class="style-circle">
+          <img src="${s.img}" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <span class="style-lbl" style="font-size:11px; font-weight:600; padding:4px 0;">${s.l}</span>
+      `;
+      b.onclick = () => {
+        document.querySelectorAll('.style-btn').forEach(x => x.classList.remove('act'));
+        b.classList.add('act');
+        $('styleVal').value = s.v
+      };
+      $('styleGrid').appendChild(b)
+    });
+    const ROOMS = [
+      { v: 'living_room', l: 'Living Room' },
+      { v: 'bedroom', l: 'Bedroom' },
+      { v: 'kitchen', l: 'Kitchen' },
+      { v: 'bathroom', l: 'Bathroom' },
+      { v: 'dining_room', l: 'Dining' },
+      { v: 'office', l: 'Office' },
+      { v: 'kids_room', l: 'Kids Room' },
+      { v: 'hallway', l: 'Hallway' }
+    ];
+    ROOMS.forEach((r, i) => { const b = document.createElement('button'); b.className = 'rpill' + (r.v === 'living_room' ? ' act' : ''); b.textContent = r.l; b.onclick = () => { document.querySelectorAll('.rpill').forEach(x => x.classList.remove('act')); b.classList.add('act'); $('roomVal').value = r.v }; $('roomPills').appendChild(b) });
+    const THEMES = [
+      { v: 'neutral', c: '#c4b49a', l: 'Neutral' },
+      { v: 'warm', c: '#d97706', l: 'Warm' },
+      { v: 'cool', c: '#3b82f6', l: 'Cool' },
+      { v: 'earthy', c: '#78716c', l: 'Earthy' },
+      { v: 'monochrome', c: '#6b7280', l: 'Mono' },
+      { v: 'pastel', c: '#f9a8d4', l: 'Pastel' },
+      { v: 'bold', c: '#dc2626', l: 'Bold' },
+      { v: 'dark', c: '#1f2937', l: 'Dark' }
+    ];
+    THEMES.forEach((t, i) => { const d = document.createElement('div'); d.className = 'tdot' + (t.v === 'neutral' ? ' act' : ''); d.style.background = t.c; d.title = t.l; d.onclick = () => { document.querySelectorAll('.tdot').forEach(x => x.classList.remove('act')); d.classList.add('act'); $('themeVal').value = t.v }; $('themeRow').appendChild(d) });
+    const SWATCHES = [
+      { v: 'white', h: '#FFFFFF', l: 'White' },
+      { v: 'off_white', h: '#F5F0E8', l: 'Off White' },
+      { v: 'warm_beige', h: '#D4B896', l: 'Warm Beige' },
+      { v: 'greige', h: '#C4B5A0', l: 'Greige' },
+      { v: 'light_grey', h: '#C0C0C0', l: 'Light Grey' },
+      { v: 'charcoal', h: '#36454F', l: 'Charcoal' },
+      { v: 'navy_blue', h: '#1B2A4A', l: 'Navy Blue' },
+      { v: 'sage_green', h: '#B2C5B0', l: 'Sage Green' },
+      { v: 'forest_green', h: '#2D4A3E', l: 'Forest Green' },
+      { v: 'dusty_rose', h: '#C4A29E', l: 'Dusty Rose' },
+      { v: 'terracotta', h: '#C2714F', l: 'Terracotta' },
+      { v: 'mustard_yellow', h: '#D4A017', l: 'Mustard' },
+      { v: 'deep_teal', h: '#1A5F7A', l: 'Deep Teal' },
+      { v: 'blush_pink', h: '#F7C5C0', l: 'Blush Pink' },
+      { v: 'slate_blue', h: '#6B8CAE', l: 'Slate Blue' },
+      { v: 'warm_taupe', h: '#B5A28A', l: 'Warm Taupe' },
+      { v: 'cream', h: '#FFFDD0', l: 'Cream' },
+      { v: 'black', h: '#1A1A1A', l: 'Black' },
+      { v: 'olive_green', h: '#6B6B47', l: 'Olive' },
+      { v: 'burgundy', h: '#722F37', l: 'Burgundy' }
+    ];
+    SWATCHES.forEach((s, i) => { const el = document.createElement('div'); el.className = 'sw' + (s.v === 'white' ? ' act' : ''); el.style.background = s.h; el.title = s.l; el.onclick = () => { $('swGrid').querySelectorAll('.sw').forEach(x => x.classList.remove('act')); el.classList.add('act'); $('wallVal').value = s.v; $('swLbl').textContent = s.l }; $('swGrid').appendChild(el) });
+    const TIERS = [
+      { max: 10000, ic: '◦', nm: 'Budget-Friendly', dsc: 'Cost-effective, IKEA-style pieces' },
+      { max: 20000, ic: '◈', nm: 'Mid-Range', dsc: 'Solid craftsmanship, durable quality' },
+      { max: 35000, ic: '✦', nm: 'High-End', dsc: 'Designer-inspired, premium finishes' },
+      { max: 50001, ic: '◉', nm: 'Luxury', dsc: 'Bespoke furniture, designer brands' }
+    ];
+    function updateTier(v) { var t = TIERS.find(x => v <= x.max) || TIERS[3]; $('tierIc').textContent = t.ic; $('tierNm').textContent = t.nm; $('tierDsc').textContent = t.dsc; }
+    $('budRange').oninput = function () { $('budAmt').textContent = '$' + parseInt(this.value).toLocaleString(); updateTier(parseInt(this.value)); };
+
+    checkUser();
+    updateTier(5000);
+    goToStep(1);
+  </script>
+</body>
+
+</html>

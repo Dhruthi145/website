@@ -11,6 +11,27 @@
   --heading: #0b1f3a;
   --text: #1a1a2e;
   --muted: #6b6458;
+  --mint: #a8e6cf;
+  /* pastel mint */
+  --fresh: #6dbe45;
+  /* already in your theme */
+  --soft: #8bcb46;
+  /* soft green */
+  --sage: #c5e1a5;
+  /* gentle sage */
+  --pastel-green: #dcedc1;
+  /* very light green */
+  --cream: #f8f7f4;
+  /* surface */
+  --beige: #f0ede8;
+  /* section */
+  --sand: #f5f5dc;
+  /* classic beige */
+  --linen: #faf0e6;
+  /* warm neutral */
+  --almond: #efdecd;
+  /* soft almond */
+
   --border: rgba(11, 31, 58, .12);
   --shadow: 0 20px 60px rgba(11, 31, 58, .12);
   --radius: 1rem;
@@ -39,23 +60,23 @@ body {
   background-position: center;
 }
 
-.agro-hero {
+.hero.agro-hero {
   background: linear-gradient(110deg, rgba(8, 16, 30, .86), rgba(11, 31, 58, .6)), url('assets/agro-inputs.svg') center/cover no-repeat fixed;
 }
 
-.commodity-hero {
+.hero.commodity-hero {
   background: linear-gradient(110deg, rgba(8, 16, 30, .86), rgba(11, 31, 58, .6)), url('assets/commodity.svg') center/cover no-repeat fixed;
 }
 
-.agro-industries-hero {
+.hero.agro-industries-hero {
   background: linear-gradient(110deg, rgba(8, 16, 30, .86), rgba(11, 31, 58, .6)), url('assets/agro-industries.svg') center/cover no-repeat fixed;
 }
 
-.export-hero {
-  background: linear-gradient(110deg, rgba(8, 16, 30, .86), rgba(11, 31, 58, .6)), url('assets/trade.svg') center/cover no-repeat fixed;
+.hero.export-hero {
+  background: linear-gradient(110deg, rgba(8, 16, 30, .78), rgba(11, 31, 58, .5)), url('https://images.pexels.com/photos/3057960/pexels-photo-3057960.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover no-repeat fixed;
 }
 
-.fmcg-hero {
+.hero.fmcg-hero {
   background: linear-gradient(110deg, rgba(8, 16, 30, .86), rgba(11, 31, 58, .6)), url('assets/fmcg.svg') center/cover no-repeat fixed;
 }
 
@@ -1540,5 +1561,124 @@ p {
   .floating-card {
     font-size: 0.85rem;
     padding: 0.8rem 1rem;
+  }
+}
+
+/* Journey Section & Timeline Styles */
+.journey-section {
+  background: var(--surface);
+  position: relative;
+}
+
+.journey-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  position: relative;
+  margin-top: 2.5rem;
+}
+
+.journey-timeline::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  bottom: 20px;
+  left: 95px;
+  width: 3px;
+  background: linear-gradient(180deg, var(--green) 0%, rgba(30, 110, 2, 0.2) 100%);
+  border-radius: 3px;
+}
+
+.journey-milestone {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+  position: relative;
+}
+
+.milestone-badge {
+  background: white;
+  color: var(--navy);
+  border: 2px solid var(--green);
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(30, 110, 2, 0.12);
+  z-index: 2;
+  font-family: 'Manrope', sans-serif;
+  transition: transform 0.3s ease;
+}
+
+
+
+.milestone-badge.highlight {
+  background: linear-gradient(135deg, var(--green), #145201);
+  color: white;
+  border-color: var(--green);
+  box-shadow: 0 6px 20px rgba(30, 110, 2, 0.25);
+}
+
+.milestone-badge.green {
+  background: var(--navy);
+  color: var(--yellow);
+  border-color: var(--navy);
+}
+
+.milestone-content {
+  background: white;
+  border-radius: 1.4rem;
+  border: 1px solid var(--border);
+  padding: 1.8rem 2.2rem;
+  box-shadow: 0 8px 24px rgba(11, 31, 58, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.journey-milestone:hover .milestone-content {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 35px rgba(11, 31, 58, 0.09);
+}
+
+.milestone-content h3 {
+  color: var(--navy);
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.milestone-subtitle {
+  color: var(--green);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.milestone-content p {
+  color: var(--text);
+  line-height: 1.75;
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+@media (max-width: 780px) {
+  .journey-timeline::before {
+    left: 20px;
+  }
+
+  .journey-milestone {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding-left: 2.8rem;
+  }
+
+  .milestone-badge {
+    align-self: flex-start;
+    display: inline-block;
+    width: auto;
+    font-size: 0.95rem;
+    padding: 0.4rem 1rem;
   }
 }

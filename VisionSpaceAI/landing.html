@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionSpace AI — AI Interior Design</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --cream: #faf7f2;
+            --cream2: #f3ede3;
+            --cream3: #ece4d6;
+            --maroon: #6b1f2a;
+            --maroon2: #8b2635;
+            --maroon3: #a63346;
+            --maroon-light: rgba(107, 31, 42, 0.08);
+            --maroon-mid: rgba(107, 31, 42, 0.15);
+            --text: #1a0a0d;
+            --text-mid: #5a3a3f;
+            --text-light: #9a7a7f;
+            --border: #e2d5c8;
+            --border2: rgba(107, 31, 42, 0.12);
+            --white: #ffffff;
+            --r: 10px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── SPLASH SCREEN ── */
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .splash-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        .splash-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        #page-landing {
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        /* ── LANDING PAGE ── */
+        #page-landing {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAV landing */
+        .land-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 60px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .land-nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .land-nav-logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .land-nav-logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .land-nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .land-nav-links a {
+            font-size: 13px;
+            color: var(--text-mid);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.2s;
+        }
+
+        .land-nav-links a:hover {
+            color: var(--maroon);
+        }
+
+        .nav-btn-about {
+            background: none;
+            border: 1px solid var(--border2);
+            color: var(--maroon);
+            padding: 9px 20px;
+            border-radius: 1000px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            margin-right: 8px;
+        }
+
+        .nav-btn-about:hover {
+            background: var(--maroon-light);
+        }
+
+        .land-nav-cta {
+            background: var(--maroon);
+            color: var(--white);
+            border: none;
+            padding: 9px 22px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .land-nav-cta:hover {
+            background: var(--maroon2);
+        }
+
+        /* HERO section */
+        .land-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 24px 60px;
+            background: var(--white);
+        }
+
+        .land-hero-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 24px;
+        }
+
+        .land-hero-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 52px);
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+
+        .land-hero-tagline {
+            font-size: 16px;
+            color: var(--text-mid);
+            font-weight: 300;
+            margin-bottom: 36px;
+            max-width: 460px;
+            line-height: 1.6;
+        }
+
+        .land-hero-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-main {
+            background: var(--maroon);
+            color: var(--white);
+            border: none;
+            padding: 14px 36px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s;
+            box-shadow: 0 4px 20px rgba(107, 31, 42, 0.25);
+        }
+
+        .btn-main:hover {
+            background: var(--maroon2);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(107, 31, 42, 0.32);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--maroon);
+            border: 1.5px solid var(--maroon);
+            padding: 13px 32px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--maroon-light);
+        }
+
+        /* Scroll gallery section */
+        .gallery-section {
+            background: var(--cream2);
+            padding: 80px 0 60px;
+            overflow: hidden;
+        }
+
+        .gallery-label {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 24px;
+        }
+
+        .gallery-label h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .gallery-label p {
+            font-size: 14px;
+            color: var(--text-light);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Auto-scrolling strips */
+        .gallery-strip {
+            display: flex;
+            gap: 14px;
+            width: max-content;
+            animation: scrollL 38s linear infinite;
+            margin-bottom: 14px;
+        }
+
+        .gallery-strip.rev {
+            animation: scrollR 42s linear infinite;
+        }
+
+        .gallery-strip:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollL {
+            from {
+                transform: translateX(0)
+            }
+
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        @keyframes scrollR {
+            from {
+                transform: translateX(-50%)
+            }
+
+            to {
+                transform: translateX(0)
+            }
+        }
+
+        .gallery-card {
+            flex-shrink: 0;
+            width: 260px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--white);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .gallery-card-imgs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .gallery-card-imgs img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-card-footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--border);
+        }
+
+        .gallery-card-footer span {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 10px;
+            color: var(--text-light);
+        }
+
+        .gallery-card-footer span:last-child {
+            color: var(--maroon);
+            border-left: 1px solid var(--border);
+        }
+
+        /* CTA band */
+        .cta-band {
+            background: var(--maroon);
+            padding: 70px 24px;
+            text-align: center;
+        }
+
+        .cta-band h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(26px, 4vw, 40px);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 14px;
+        }
+
+        .cta-band p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .btn-cream {
+            background: var(--cream);
+            color: var(--maroon);
+            border: none;
+            padding: 14px 40px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-cream:hover {
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        /* FEATURES */
+        .features-section {
+            background: var(--white);
+            padding: 80px 40px;
+        }
+
+        .features-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .features-inner h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 3vw, 34px);
+            font-weight: 600;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feat-card {
+            background: var(--cream2);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 28px 24px;
+        }
+
+        .feat-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--maroon-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .feat-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--maroon);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .feat-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .feat-desc {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.65;
+        }
+
+        /* FOOTER landing */
+        .land-footer {
+            background: var(--cream2);
+            border-top: 1px solid var(--border);
+            padding: 24px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .land-footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        @media(max-width:800px) {
+            .land-nav {
+                padding: 16px 24px;
+            }
+
+            .land-nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .land-footer {
+                padding: 20px 24px;
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
+
+        /* ── AUTH MODAL ── */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 10, 13, 0.55);
+            backdrop-filter: blur(6px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-bg.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 400px;
+            margin: 16px;
+            overflow: hidden;
+            position: relative;
+            animation: mIn 0.28s ease;
+        }
+
+        @keyframes mIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: var(--cream2);
+            border: none;
+            border-radius: 7px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 32px 28px 28px;
+        }
+
+        .modal-logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .modal-logo img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .modal-logo-txt {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .auth-seg {
+            display: flex;
+            background: var(--cream2);
+            padding: 4px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .auth-seg-btn {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .auth-seg-btn.act {
+            background: var(--white);
+            color: var(--maroon);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-panel {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .auth-panel.act {
+            display: flex;
+        }
+
+        .auth-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* User Chip & Dropdown */
+        .user-chip {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--cream2);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 4px 13px 4px 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-chip:hover {
+            border-color: var(--maroon);
+            transform: translateY(-1px);
+        }
+
+        .user-chip.show {
+            display: flex;
+        }
+
+        .user-av {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--maroon);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-nm {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .user-dd {
+            display: none;
+            position: absolute;
+            top: 54px;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            width: 200px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(107, 31, 42, 0.12);
+            z-index: 4000;
+            text-align: left;
+        }
+
+        .user-dd.open {
+            display: block;
+        }
+
+        .user-dd-head {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            background: var(--maroon-light);
+        }
+
+        .user-dd-head strong {
+            display: block;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .user-dd-head span {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .user-dd-item {
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            padding: 11px 16px;
+            font-size: 13px;
+            color: var(--text-mid);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .user-dd-item:hover {
+            background: var(--cream2);
+            color: var(--maroon);
+        }
+
+        .user-dd-item.logout {
+            color: #c0392b;
+            border-top: 1px solid var(--border2);
+        }
+
+        .auth-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-mid);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .auth-inp {
+            background: var(--cream2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 11px 13px;
+            font-size: 14px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .auth-inp:focus {
+            outline: none;
+            border-color: var(--maroon);
+        }
+
+        .auth-btn {
+            background: var(--maroon);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .auth-btn:hover {
+            background: var(--maroon2);
+        }
+
+        .auth-err {
+            font-size: 12px;
+            color: #c0392b;
+            min-height: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SPLASH -->
+    <div id="splash">
+        <img class="splash-icon"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b1f2a'/%3E%3Cpath d='M12 34L32 16l20 18' fill='none' stroke='%23faf7f2' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='20' y='34' width='10' height='14' rx='2' fill='%23faf7f2'/%3E%3Crect x='34' y='28' width='10' height='20' rx='2' fill='rgba(250,247,242,0.55)'/%3E%3C/svg%3E"
+            alt="VisionSpace">
+        <div class="splash-text">VisionSpace AI</div>
+    </div>
+
+    <div id="page-landing">
+
+        <!-- NAV -->
+        <nav class="land-nav">
+            <a class="land-nav-logo" href="#">
+                <img class="land-nav-logo-icon"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b1f2a'/%3E%3Cpath d='M12 34L32 16l20 18' fill='none' stroke='%23faf7f2' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='20' y='34' width='10' height='14' rx='2' fill='%23faf7f2'/%3E%3Crect x='34' y='28' width='10' height='20' rx='2' fill='rgba(250,247,242,0.55)'/%3E%3C/svg%3E"
+                    alt="VisionSpace AI">
+                <span class="land-nav-logo-text">VisionSpace AI</span>
+            </a>
+            <div class="land-nav-links">
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#gallery">Gallery</a>
+                <a href="/app">Studio</a>
+            </div>
+            <div style="position:relative; display: flex; align-items: center; gap: 10px;">
+                <div id="authBtns" style="display: flex; align-items: center;">
+                    <!-- Login/Signup buttons will be here if needed -->
+                </div>
+                <button class="nav-btn-about" onclick="openAbout()">About</button>
+                <div class="user-chip" id="userChip" onclick="toggleDD(event)">
+                    <div class="user-av" id="userAv"></div>
+                    <span class="user-nm" id="userNm"></span>
+                </div>
+                <div class="user-dd" id="userDD">
+                    <div class="user-dd-head">
+                        <strong id="ddNm"></strong>
+                        <span id="ddEmail"></span>
+                    </div>
+                    <button class="user-dd-item" onclick="window.location='/app'">
+                        <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg> Go to Studio
+                    </button>
+                    <button class="user-dd-item logout" onclick="doLogout()">
+                        <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg> Sign Out
+                    </button>
+                </div>
+                <button class="land-nav-cta" onclick="window.location='/app'">Start Designing</button>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <section class="land-hero">
+            <img class="land-hero-icon"
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='28' fill='%236b1f2a'/%3E%3Cpath d='M22 64L60 28l38 36' fill='none' stroke='%23faf7f2' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='38' y='64' width='18' height='28' rx='4' fill='%23faf7f2'/%3E%3Crect x='64' y='52' width='18' height='40' rx='4' fill='rgba(250,247,242,0.5)'/%3E%3Ccircle cx='60' cy='18' r='5' fill='%23c98a3a'/%3E%3C/svg%3E"
+                alt="VisionSpace AI">
+            <h1 class="land-hero-name">VisionSpace AI</h1>
+            <p class="land-hero-tagline">Redesign every wall of your room with AI — just upload a video walkthrough and
+                we handle the rest.</p>
+            <div class="land-hero-btns">
+                <button class="btn-main" onclick="window.location='/app'">Start Designing Free</button>
+                <button class="btn-outline"
+                    onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">See
+                    Examples</button>
+            </div>
+        </section>
+
+        <!-- GALLERY -->
+        <section class="gallery-section" id="gallery">
+            <div class="gallery-label">
+                <h2>Before &amp; After Transformations</h2>
+                <p>Real room redesigns generated by VisionSpace AI — every style, every wall.</p>
+            </div>
+
+            <!-- Strip 1 -->
+            <div style="overflow:hidden;margin-bottom:14px;">
+                <div class="gallery-strip" id="strip1"></div>
+            </div>
+            <!-- Strip 2 -->
+            <div style="overflow:hidden;">
+                <div class="gallery-strip rev" id="strip2"></div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-band">
+            <h2>Ready to transform your space?</h2>
+            <p>Upload a short video of your room and get photorealistic redesigns in minutes — no design skills needed.
+            </p>
+            <button class="btn-cream" onclick="window.location='/app'">Start Designing Now →</button>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="features-section" id="about" style="background: var(--cream2); border-bottom: 1px solid var(--border);">
+            <div class="features-inner" style="text-align: center;">
+                <h2 style="margin-bottom: 24px;">About VisionSpace AI</h2>
+                <p style="color: var(--text-mid); max-width: 750px; margin: 0 auto 40px; line-height: 1.8; font-size: 15px;">
+                    VisionSpace AI is an intelligent spatial design platform that bridges the gap between imagination and reality. 
+                    Using cutting-edge computer vision and generative AI, we transform simple video walkthroughs into 
+                    stunning, photorealistic interior concepts. Our mission is to democratize high-end interior design, 
+                    making it accessible, instant, and incredibly intuitive for everyone.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
+                    <div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--maroon);">100%</div>
+                        <div style="font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">AI Driven</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--maroon);">4K</div>
+                        <div style="font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">Resolutions</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--maroon);">Instant</div>
+                        <div style="font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">Turnaround</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="features-section" id="features">
+            <div class="features-inner">
+                <h2>Everything you need to redesign</h2>
+                <div class="features-grid">
+                    <div class="feat-card">
+                        <div class="feat-icon"><svg viewBox="0 0 24 24">
+                                <path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14" />
+                                <rect x="1" y="6" width="15" height="12" rx="2" />
+                            </svg></div>
+                        <div class="feat-title">Video Walkthrough Input</div>
+                        <div class="feat-desc">Simply walk through your room with your phone. We extract and analyse
+                            every wall automatically using computer vision.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><svg viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <line x1="12" y1="3" x2="12" y2="21" />
+                            </svg></div>
+                        <div class="feat-title">Per-Wall Generation</div>
+                        <div class="feat-desc">Each wall gets its own redesigned image. A 4-wall room gets 4
+                            before/after comparisons — not just one generic render.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4" />
+                            </svg></div>
+                        <div class="feat-title">Full Style Control</div>
+                        <div class="feat-desc">Choose from 9 design styles, 20 wall colours, curtains, flooring,
+                            lighting mood, wall decor, plants and ceiling styles.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><svg viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg></div>
+                        <div class="feat-title">11-Step AI Pipeline</div>
+                        <div class="feat-desc">YOLOv8 object detection, ResNet50 feature extraction, and Stable
+                            Diffusion img2img — all chained together seamlessly.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><svg viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg></div>
+                        <div class="feat-title">Download Everything</div>
+                        <div class="feat-desc">Download individual images or the full ZIP bundle. All before/after pairs
+                            included with your design history saved to your account.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon"><svg viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg></div>
+                        <div class="feat-title">Personal Account</div>
+                        <div class="feat-desc">Sign in to save your design history, revisit past projects and track your
+                            preferences over time.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT MODAL -->
+        <div class="modal-bg" id="aboutModal">
+            <div class="modal" style="max-width: 1100px;">
+                <button class="modal-close" onclick="closeAbout()">✕</button>
+                <div class="modal-body" style="background: var(--white); color: var(--text);">
+                    <h2
+                        style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; color: var(--maroon);">
+                        AI Pipeline Processing</h2>
+
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">1.
+                                Video Upload</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Capture a 360° spatial walkthrough of your room to provide full situational context.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: Flask, HTML5 Video API</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">2.
+                                Preference Input</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Define your vision by selecting styles, color palettes, and budget constraints.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: JavaScript, JSON Schema</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">3.
+                                Frame Extraction</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Processing the uploaded video to sample high-resolution interior frames.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: OpenCV (python-opencv)</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">4.
+                                Frame Selection</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Identifying unique walls and scenes using structural similarity (SSIM) analysis.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: Scikit-Image, Hist-Diff</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">5.
+                                Image Preprocessing</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Removing blurs via Laplacian variance check and normalizing lighting data.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: OpenCV, NumPy</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">6.
+                                Object Detection</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Recognizing furniture and room boundaries to maintain architectural scale.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: YOLOv8 (Ultralytics)</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">7.
+                                Feature Extraction</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Analyzing textures, materials, and existing decor styles using deep learning.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: ResNet50 (PyTorch)</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">8.
+                                Preference Encoding</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Transforming user choices into high-dimensional AI-readable vector tokens.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: CLIP Text Encoder</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">9.
+                                Feature Fusion</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Synchronizing visual room data with user style preferences for generation.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: Tensor Concatenation</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">
+                                10. Prompt Generation</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Synthesizing a precise generative instruction based on fused characteristics.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: GPT-based Prompt Logic</div>
+                        </div>
+                        <div
+                            style="background: var(--maroon-light); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div style="color: var(--maroon); font-weight: 700; font-size: 14px; margin-bottom: 4px;">
+                                11. Design Generation</div>
+                            <p style="font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-bottom: 8px;">
+                                Synthesizing photorealistic redesigns with architectural fidelity.</p>
+                            <div
+                                style="font-size: 10px; font-weight: 700; color: var(--maroon); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Tech: Stable Diffusion + ControlNet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH MODAL (HIDDEN ON LANDING AS PER REQUEST) -->
+        <div class="modal-bg" id="authBg">
+            <div class="modal">
+                <button class="modal-close" onclick="closeAuth()">✕</button>
+                <div class="modal-body">
+                    <div class="modal-logo">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b1f2a'/%3E%3Cpath d='M12 34L32 16l20 18' fill='none' stroke='%23faf7f2' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='20' y='34' width='10' height='14' rx='2' fill='%23faf7f2'/%3E%3Crect x='34' y='28' width='10' height='20' rx='2' fill='rgba(250,247,242,0.55)'/%3E%3C/svg%3E"
+                            alt="">
+                        <span class="modal-logo-txt">VisionSpace AI</span>
+                    </div>
+
+                    <div class="auth-panel" id="ap-login">
+                        <div class="auth-field"><label class="auth-lbl">Email</label><input class="auth-inp"
+                                type="email" id="lemail" placeholder="you@example.com"></div>
+                        <div class="auth-field"><label class="auth-lbl">Password</label><input class="auth-inp"
+                                type="password" id="lpwd" placeholder="••••••••"></div>
+                        <div class="auth-err" id="lerr"></div>
+                        <button class="auth-btn" onclick="doLogin()">Sign In</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="land-footer">
+            <span class="land-footer-logo">VisionSpace AI</span>
+            <span>© 2025 VisionSpace AI · All rights reserved</span>
+            <span>Flask · OpenCV · YOLOv8 · Stable Diffusion</span>
+        </footer>
+
+    </div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        // Splash logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const s = $('splash');
+                if (s) {
+                    s.style.opacity = '0';
+                    s.style.visibility = 'hidden';
+                }
+                const p = $('page-landing');
+                if (p) p.style.opacity = '1';
+                document.body.style.overflow = 'auto';
+            }, 2500);
+            checkUser();
+        });
+
+        function openAbout() { $('aboutModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeAbout() { $('aboutModal').classList.remove('open'); document.body.style.overflow = 'auto'; }
+
+        async function checkUser() {
+            const r = await fetch('/api/auth/me');
+            const d = await r.json();
+            if (d.user) {
+                $('authBtns').style.display = 'none';
+                $('userChip').classList.add('show');
+                $('userNm').textContent = d.user.name;
+                $('userAv').textContent = d.user.name[0].toUpperCase();
+                $('userAv').style.background = d.user.avatar_color;
+                $('ddNm').textContent = d.user.name;
+                $('ddEmail').textContent = d.user.email;
+            }
+        }
+
+        function openAuth(t) { $('authBg').classList.add('open'); if (t) switchAuth(t); }
+        function closeAuth() { $('authBg').classList.remove('open'); }
+        function switchAuth(t) {
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('act'));
+            document.querySelectorAll('.auth-seg-btn').forEach(b => b.classList.remove('act'));
+            $('ap-' + t).classList.add('act');
+            $('tab-' + t).classList.add('act');
+        }
+        function toggleDD(e) { e.stopPropagation(); $('userDD').classList.toggle('open'); }
+        document.onclick = () => { if ($('userDD')) $('userDD').classList.remove('open'); };
+
+        async function doLogin() {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: $('lemail').value, password: $('lpwd').value })
+            });
+            const d = await res.json();
+            if (d.user) location.reload();
+            else $('lerr').textContent = d.error;
+        }
+
+        async function doSignup() {
+            const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: $('sname').value, email: $('semail').value, password: $('spwd').value })
+            });
+            const d = await res.json();
+            if (d.user) location.reload();
+            else $('serr').textContent = d.error;
+        }
+
+        async function doLogout() { await fetch('/api/auth/logout', { method: 'POST' }); location.reload(); }
+
+        // Gallery data
+        var PAIRS = [
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Finterior_design_1_before.jpeg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Finterior_design_1_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Modern' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Finterior_design_2_before.jpeg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Finterior_design_2_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Boho' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_1_before.png&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_1_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Minimal' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_2_before.png&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_2_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Luxury' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_3_before.jpeg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_3_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Industrial' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fwall_color_1_before.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_3_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Scandi' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fcabinet_color_1_before.jpeg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fvirtual_staging_3_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Zen' },
+            { before: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fremove_objects_1_after.jpg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', after: 'https://www.decor8.ai/_next/image?url=%2Fimages-before-after%2Fremove_objects_1_before.jpeg&w=1920&q=75&dpl=dpl_Hix4od9uH5e7vnUW8yjrRzfyd6Q8', style: 'Modern' }
+        ];
+
+        function makeCard(p) {
+            return '<div class="gallery-card"><div class="gallery-card-imgs"><img src="' + p.before + '" loading="lazy" alt="Before"><img src="' + p.after + '" loading="lazy" alt="After"></div><div class="gallery-card-footer"><span>Before</span><span>After · ' + p.style + '</span></div></div>';
+        }
+
+        var s1 = $('strip1');
+        var s2 = $('strip2');
+        if (s1 && s2) {
+            var html1 = PAIRS.concat(PAIRS).concat(PAIRS).map(makeCard).join('');
+            s1.innerHTML = html1;
+            var rev = PAIRS.slice().reverse();
+            var html2 = rev.concat(rev).concat(rev).map(makeCard).join('');
+            s2.innerHTML = html2;
+        }
+    </script>
+</body>
+
+</html>
